@@ -54,8 +54,52 @@ const Reconciler = {
       domElement._virtualElement =  newVirtualElement;
   },
 
-  updateDomElement: () => {
-      
+  updateDomElement: (domElement, newVirtualElement, oldVirtualElement) => {
+    const newProps = newVirtualElement.props;
+    const oldProps = oldVirtualElement.props;
+
+    Object.keys(newProps).forEach( (propName) => {
+        const newProp = newProps[propName];
+        const oldProp = oldProps[propName];
+
+        if (newProp !== oldProp) {
+            if (propName.slice(0,2) === 'on') {
+                // this prop is an event handler!
+                const eventName = propName.toLowerCase().slice(2);
+                domElement.addEventListener(eventName, newProp, false);
+                if (oldProp){
+                    domElement.removeEventListener(eventName, oldProp, false);
+                }
+            } else if (propName === 'value' || propName === 'checked') {
+                // this prop contains special attributes that cannot be set using setAttribute
+                domElement[propName] = newProp;
+            } else if (propName !== 'children') {
+                // ignores the 'children' prop
+                domElement.setAttribute(propName, newProps[propName]);
+
+            }
+        }
+
+    });
+
+    // removes oldProps
+
+    Object.keys(oldProps).forEach( (propName)=> {
+        const newProp = newProps[propName];
+        const oldProp = oldProps[propName];
+
+        if (!newProp) {
+            if (propName.slice(0,2)==='on'){
+                // this prop is an event handler!
+                domElement.removeEventListener(propName, oldProp, false);
+            } else if (propName !== children ) {
+                // ignores the 'children' prop
+                domElement.removeAttribute(propName);
+            }
+        }
+    });
+
+
   },
 
   mountElement: () => {
