@@ -46,9 +46,17 @@ const Reconciler = {
     }
   },
 
-  updateTextNode: () => {},
+  updateTextNode: (domElement, newVirtualElement, oldVirtualElement) => {
+      if (newVirtualElement.props.textContent !== oldVirtualElement.props.textContent) {
+          domElement.textContent = newVirtualElement.props.textContent;
+      }
+      // saves a reference to the virtual element into the domElement
+      domElement._virtualElement =  newVirtualElement;
+  },
 
-  updateDomElement: () => {},
+  updateDomElement: () => {
+      
+  },
 
   mountElement: () => {
     let newDomElement;
