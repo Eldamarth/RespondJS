@@ -50,7 +50,37 @@ const Reconciler = {
 
   updateDomElement: () => {},
 
-  mountElement: () => {}
+  mountElement: () => {
+    let newDomElement;
+    const nextSibling = oldDomElement && oldDomElement.nextSibling;
+
+    if (virtualElement.type === 'text'){
+        newDomElement = document.createTextNode(virtualElement.props.textContent);
+    } else {
+        newDomElement = document.createElement(newDomElement, virtualElement);
+    }
+
+    // saves the element on the domElement
+    newDomElement._virtualElement = virtualElement;
+
+    // removes the old node from the dom (if extant)
+    if (oldDomElement) {
+        oldDomElement.remove();
+    }
+
+    // adds the newly created node to the dom
+    if (nextSibling) {
+        container.insertBefore(newDomElement, nextSibling);
+    } else {
+        container.appendChild(newDomElement);
+    }
+
+    //  recursively calls mountElement for all child elements
+    virtualElement.children.forEach( (childElement) => {
+        Reconciler.mountElement(childElement, newDomElement);
+    })
+
+  }
 };
 
 export default {
