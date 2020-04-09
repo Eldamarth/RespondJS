@@ -5,7 +5,7 @@ const Reconciler = {
     const oldVirtualElement = oldDomElement && oldDomElement._virtualElement;
 
     if (oldVirtualElement && oldVirtualElement.type === virtualElement.type) {
-      if (oldVirtualElement.tyoe === "text") {
+      if (oldVirtualElement.type === "text") {
         Reconciler.updateTextNode(
           oldDomElement,
           virtualElement,

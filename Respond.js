@@ -1,5 +1,5 @@
-const Respond = {
-    createElement: (type, attributes = {}, children = []) => {
+
+    createElement = (type, attributes = {}, children = []) => {
         const childElements = children.map(child => (
             typeof child === 'string' ? 
                 Respond.createElement('text', {textContent: child}) :
@@ -16,6 +16,15 @@ const Respond = {
         };
 
     }
-};
+    class Constituent {
+        constructor(props) {
+            this.props = props
+        }
 
-export default Respond;
+        render () {
+            
+        }
+    }
+
+
+export default {createElement, Constituent};
