@@ -5,7 +5,6 @@ const Reconciler = {
     const oldVirtualElement = oldDomElement && oldDomElement._virtualElement;
     const oldConstituent = oldVirtualElement && oldVirtualElement.constituent;
 
-
     // Handle constituents
     if (typeof virtualElement.type === "function") {
       Reconciler.diffConstituent(
@@ -57,6 +56,27 @@ const Reconciler = {
       }
     } else {
       Reconciler.mountElement(virtualElement, container, oldDomElement);
+    }
+  },
+
+  diffConstituent: (newVirtualElement, oldConstituent, container, domNode) => {
+    // checks for same constructor
+    if (
+      oldConstituent &&
+      newVirtualElement.type === oldConstituent.constructor
+    ) {
+      // updates constituent
+      oldConstituent.updateProps(newVirtualElement.props);
+      const nextElement = oldConstituent.render();
+
+      Reconciler.diff(nextElement, container, domNode, oldConstituent);
+    } else {
+      Reconciler.mountElement(
+        newVirtualElement,
+        container,
+        domNode,
+        parentConsituent
+      );
     }
   },
 
